@@ -126,7 +126,7 @@ func main() {
 		// Check if the url is valid.
 		if isUrlValid(urls) {
 			// Download the zip.
-			downloadZIP(urls, zipOutputDir)
+			// downloadZIP(urls, zipOutputDir)
 		}
 	}
 	// Get all the values.
