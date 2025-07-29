@@ -41,6 +41,8 @@ jobs:
         run: |
           git config user.name "github-actions"  # Set Git username for commit
           git config user.email "github-actions@github.com"  # Set Git email for commit
+          find PDFs/ -type f -iname "*.pdf" -size +100M -print -delete # Remove 100 MB PDF
+          find ZIPs/ -type f -iname "*.zip" -size +100M -print -delete # Remove 100 MB ZIP
           git pull # Pull all the latest changes.
           git add .  # Stage all modified files
           if ! git diff --cached --quiet; then  # Check if there are any staged changes
