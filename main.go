@@ -473,20 +473,26 @@ func appendToSlice(slice []string, content string) []string {
 
 // getDataFromURL performs an HTTP GET request and returns the response body as a string
 func getDataFromURL(uri string) string {
-	log.Println("Scraping", uri)   // Log the URL being scraped
-	response, err := http.Get(uri) // Perform GET request
+	log.Println("Scraping", uri) // Log the URL being scraped for debugging or monitoring
+
+	response, err := http.Get(uri) // Perform the HTTP GET request
 	if err != nil {
-		log.Println(err) // Exit if request fails
+		log.Println("HTTP GET error:", err) // Log the error if the request fails
+		return ""                           // Return empty string to prevent further execution on error
 	}
 
-	body, err := io.ReadAll(response.Body) // Read response body
+	// Ensure the response body is closed when we're done (even if an error occurs later)
+	defer func() {
+		if err := response.Body.Close(); err != nil {
+			log.Println("Error closing response body:", err) // Log any error encountered when closing the body
+		}
+	}()
+
+	body, err := io.ReadAll(response.Body) // Read the response body into memory
 	if err != nil {
-		log.Println(err) // Exit if read fails
+		log.Println("Error reading response body:", err) // Log the error if reading fails
+		return ""                                        // Return empty string if we couldn't read the body
 	}
 
-	err = response.Body.Close() // Close response body
-	if err != nil {
-		log.Println(err) // Exit if close fails
-	}
-	return string(body)
+	return string(body) // Return the body as a string
 }
